@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Append</title>
+</head>
+<body>
+    <h2>Append Contents of First File to Second File</h2>
+    <form action="/append" method="post">
+        <label for="firstFile">First File Name:</label><br>
+        <input type="text" id="firstFile" name="firstFile"><br><br>
+        
+        <label for="secondFile">Second File Name:</label><br>
+        <input type="text" id="secondFile" name="secondFile"><br><br>
+        
+        <input type="submit" value="Append">
+    </form>
+</body>
+</html>

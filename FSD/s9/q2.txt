@@ -1,0 +1,35 @@
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
+
+const server = http.createServer((req, res) => {
+    // Extract the file path from the request URL
+    const filePath = path.join(__dirname, req.url);
+
+    // Check if the file exists
+    fs.access(filePath, fs.constants.F_OK, (err) => {
+        if (err) {
+            // File not found
+            res.writeHead(404, {'Content-Type': 'text/plain'});
+            res.end('404 Not Found');
+        } else {
+            // File found, read its content and send it to the client
+            fs.readFile(filePath, (err, data) => {
+                if (err) {
+                    // Error reading file
+                    res.writeHead(500, {'Content-Type': 'text/plain'});
+                    res.end('Internal Server Error');
+                } else {
+                    // Send file content to the client
+                    res.writeHead(200, {'Content-Type': 'text/plain'});
+                    res.end(data);
+                }
+            });
+        }
+    });
+});
+
+const PORT = 3000;
+server.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}/`);
+});

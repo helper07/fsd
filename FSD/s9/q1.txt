@@ -1,0 +1,33 @@
+const fs = require('fs');
+
+// HTML content for the form
+const htmlContent = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>String Concatenation Form</title>
+</head>
+<body>
+    <h2>String Concatenation Form</h2>
+    <form action="/concatenate" method="post">
+        <label for="string1">String 1:</label>
+        <input type="text" id="string1" name="string1"><br><br>
+
+        <label for="string2">String 2:</label>
+        <input type="text" id="string2" name="string2"><br><br>
+
+        <button type="submit">Concatenate Strings</button>
+    </form>
+</body>
+</html>
+`;
+
+// Write HTML content to a file
+fs.writeFile('string_concatenation_form.html', htmlContent, (err) => {
+    if (err) {
+        console.error('Error writing HTML file:', err);
+    } else {
+        console.log('HTML file created successfully!');
+    }
+});

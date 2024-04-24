@@ -1,0 +1,57 @@
+// app.js
+
+const express = require('express');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+
+const app = express();
+const port = 3000;
+
+// Dummy user data (in-memory storage)
+const users = [
+    { username: 'user1', password: 'password1' },
+    { username: 'user2', password: 'password2' }
+];
+
+// Middleware
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+}));
+
+// Routes
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/login.html');
+});
+
+app.post('/login', (req, res) => {
+    const { username, password } = req.body;
+    // Check if user exists
+    const user = users.find(user => user.username === username && user.password === password);
+    if (user) {
+        req.session.user = user;
+        res.redirect('/profile');
+    } else {
+        res.send('Invalid username or password.');
+    }
+});
+
+app.get('/profile', (req, res) => {
+    if (req.session.user) {
+        res.send('Welcome, ' + req.session.user.username + '!');
+    } else {
+        res.redirect('/');
+    }
+});
+
+app.get('/logout', (req, res) => {
+    req.session.destroy();
+    res.redirect('/');
+});
+
+// Start the server
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+});

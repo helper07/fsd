@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="alertMessageApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Display Alert Message</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body>
+    <div ng-controller="AlertController">
+        <h2>Click the button to display an alert message</h2>
+        <button ng-click="displayAlert()">Click me</button>
+    </div>
+
+    <script>
+        var app = angular.module('alertMessageApp', []);
+
+        app.controller('AlertController', function($scope) {
+            $scope.displayAlert = function() {
+                alert("Hello! You clicked the button.");
+            };
+        });
+    </script>
+</body>
+</html>

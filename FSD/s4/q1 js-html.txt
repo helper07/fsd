@@ -1,0 +1,103 @@
+// app.js
+
+const express = require('express');
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const session = require('express-session');
+
+const app = express();
+const port = 3000;
+
+// MongoDB connection
+mongoose.connect('mongodb://localhost/elearning', { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('Connected to MongoDB'))
+    .catch(err => console.error('Error connecting to MongoDB:', err));
+
+// User schema
+const userSchema = new mongoose.Schema({
+    username: String,
+    password: String
+});
+
+const User = mongoose.model('User', userSchema);
+
+// Middleware
+app.use(express.urlencoded({ extended: true }));
+app.use(session({ secret: 'secret', resave: true, saveUninitialized: true }));
+
+// Routes
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/index.html');
+});
+
+app.post('/register', async (req, res) => {
+    const { username, password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({ username, password: hashedPassword });
+    await user.save();
+    res.redirect('/');
+});
+
+app.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+    const user = await User.findOne({ username });
+    if (user && await bcrypt.compare(password, user.password)) {
+        req.session.user = user;
+        res.redirect('/dashboard');
+    } else {
+        res.send('Invalid username or password.');
+    }
+});
+
+app.get('/dashboard', (req, res) => {
+    if (req.session.user) {
+        res.send('Welcome to the dashboard, ' + req.session.user.username + '!');
+    } else {
+        res.redirect('/');
+    }
+});
+
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+});
+
+
+
+
+
+
+
+html:
+
+
+<!-- index.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>eLearning System</title>
+</head>
+<body>
+    <h2>User Registration</h2>
+    <form action="/register" method="post">
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username"><br><br>
+        
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password"><br><br>
+        
+        <input type="submit" value="Register">
+    </form>
+
+    <h2>User Login</h2>
+    <form action="/login" method="post">
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username"><br><br>
+        
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password"><br><br>
+        
+        <input type="submit" value="Login">
+    </form>
+</body>
+</html>

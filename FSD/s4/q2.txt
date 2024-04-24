@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="studentRegistrationApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Registration Form</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script>
+        var app = angular.module('studentRegistrationApp', []);
+
+        app.controller('StudentRegistrationController', function($scope, $http) {
+            $scope.student = {};
+
+            $scope.submitForm = function() {
+                // Perform form validation
+                if ($scope.validateForm()) {
+                    // Submit form data using AJAX
+                    $http.post('submit_url', $scope.student)
+                        .then(function(response) {
+                            // Handle success
+                            console.log(response.data);
+                        })
+                        .catch(function(error) {
+                            // Handle error
+                            console.error('Error occurred:', error);
+                        });
+                }
+            };
+
+            $scope.validateForm = function() {
+                // Validate first and last name
+                var namePattern = /^[a-zA-Z ]*$/;
+                if (!namePattern.test($scope.student.firstName) || !namePattern.test($scope.student.lastName)) {
+                    alert("First and last name should contain only alphabets");
+                    return false;
+                }
+
+                // Validate age
+                var age = parseInt($scope.student.age);
+                if (age < 18 || age > 50 || isNaN(age)) {
+                    alert("Age should be between 18 and 50");
+                    return false;
+                }
+
+                return true;
+            };
+
+            $scope.getGreetingMessage = function() {
+                var currentTime = new Date();
+                var currentHour = currentTime.getHours();
+                if (currentHour < 12) {
+                    return "Good Morning";
+                } else if (currentHour < 18) {
+                    return "Good Afternoon";
+                } else {
+                    return "Good Evening";
+                }
+            };
+        });
+    </script>
+</head>
+<body ng-controller="StudentRegistrationController">
+    <h2>Student Registration Form</h2>
+    <form ng-submit="submitForm()">
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" ng-model="student.firstName" required><br><br>
+
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" ng-model="student.lastName" required><br><br>
+
+        <label for="age">Age:</label>
+        <input type="number" id="age" ng-model="student.age" required><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <div ng-show="student.firstName && student.lastName && student.age">
+        <p>{{ getGreetingMessage() }}, {{ student.firstName }}!</p>
+    </div>
+</body>
+</html>

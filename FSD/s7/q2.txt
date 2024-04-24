@@ -1,0 +1,39 @@
+// Importing the built-in EventEmitter module
+const EventEmitter = require('events');
+
+// Creating an instance of EventEmitter
+const eventEmitter = new EventEmitter();
+
+// Example event listeners
+eventEmitter.on('event1', () => {
+    console.log('Event 1 occurred');
+});
+
+eventEmitter.on('event2', () => {
+    console.log('Event 2 occurred');
+});
+
+// Main loop to listen for events
+console.log('Main loop started. Listening for events...');
+
+// Simulating event triggering
+setTimeout(() => {
+    eventEmitter.emit('event1');
+}, 2000);
+
+setTimeout(() => {
+    eventEmitter.emit('event2');
+}, 4000);
+
+// Example of handling events from external sources
+process.stdin.on('data', (data) => {
+    const userInput = data.toString().trim();
+    if (userInput === 'exit') {
+        console.log('Exiting the program...');
+        process.exit();
+    } else {
+        console.log(`Received input: ${userInput}`);
+    }
+});
+
+console.log('Enter "exit" to terminate the program.');

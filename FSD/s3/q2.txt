@@ -1,0 +1,42 @@
+// app.js
+
+const mysql = require('mysql');
+
+// Create a connection to the MySQL database
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'your_username',
+    password: 'your_password',
+    database: 'your_database'
+});
+
+// Connect to the database
+connection.connect((err) => {
+    if (err) {
+        console.error('Error connecting to database:', err);
+        return;
+    }
+    console.log('Connected to database');
+});
+
+// Select all records from the Teacher table
+connection.query('SELECT * FROM Teacher', (err, results) => {
+    if (err) {
+        console.error('Error selecting records:', err);
+        return;
+    }
+    console.log('All Teachers:');
+    console.log(results);
+
+    // Find teachers whose salary is greater than 20,000
+    const highSalaryTeachers = results.filter(teacher => teacher.salary > 20000);
+    console.log('Teachers with salary greater than 20,000:');
+    console.log(highSalaryTeachers);
+});
+
+// Close the connection
+connection.end();
+
+
+
+run:node app.js

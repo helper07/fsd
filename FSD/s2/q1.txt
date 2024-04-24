@@ -1,0 +1,15 @@
+// ReverseString.js
+
+// Input string
+const inputString = "Full Stack!";
+
+// Function to reverse a string
+function reverseString(str) {
+    return str.split('').reverse().join('');
+}
+
+// Convert the input string to reverse
+const reversedString = reverseString(inputString);
+
+// Output the reversed string
+console.log("Reversed String:", reversedString);
